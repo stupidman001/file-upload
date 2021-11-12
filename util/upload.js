@@ -5,14 +5,16 @@ const Busboy = require('busboy')
 
 /**
  * 同步创建文件目录
- * @param  {string} dirname 目录绝对地址
+ * @param  {string} dirname 目录绝对地址  D:\qiangyujun\Desktop\KOA\upload-files\album
  * @return {boolean}        创建目录结果
  */
 function mkdirsSync( dirname ) {
+  // 存储文件的文件夹存在了，返回 true
   if (fs.existsSync( dirname )) {
     return true
   } else {
-    if (mkdirsSync( path.dirname(dirname)) ) {
+  //  存储文件的文件夹不存在，创建文件夹
+    if (mkdirsSync(path.dirname(dirname)) ) {
       fs.mkdirSync( dirname )
       return true
     }
@@ -36,14 +38,19 @@ function getSuffixName( fileName ) {
  * @return {promise}         
  */
 function uploadFile( ctx, options) {
+  // 请求和响应
   let req = ctx.req
   let res = ctx.res
+
   let busboy = new Busboy({headers: req.headers})
 
   // 获取类型
   let fileType = options.fileType || 'common'
-  let filePath = path.join( options.path,  fileType)
+  console.log('存储的位置' + options.path)           // D:\qiangyujun\Desktop\KOA\upload-files
+  console.log('文件类型' + fileType)                 // album
+  let filePath = path.join(options.path,  fileType) // D:\qiangyujun\Desktop\KOA\upload-files\album
   let mkdirResult = mkdirsSync( filePath )
+  // 现在存储文件的文件夹创建好了
   
   return new Promise((resolve, reject) => {
     console.log('文件上传中...')
